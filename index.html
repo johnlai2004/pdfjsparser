@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="pdf.js"></script>
+    <script src="pdf.worker.js"></script>
+    <script>
+let _content = {};
+document.addEventListener('DOMContentLoaded',_=>
+  document.getElementById('file').addEventListener('change',e=>{
+    document.getElementById('content').innerHTML = '';
+    Array.from(e.target.files).forEach(file=>loadFile(file));
+  })
+);
+
+function loadFile(file) {
+  let fileReader = new FileReader();
+  _content[file.name] = {};
+  fileReader.onload = async function(ev) {
+    await loadFileComplete(ev,file.name);
+    printData();
+  };
+  fileReader.readAsArrayBuffer(file, "UTF-8");
+}
+
+async function loadFileComplete(ev,filename) {
+  const pdf = await PDFJS.getDocument(new Uint8Array(ev.target.result));
+  for(let c=1; c<=pdf.numPages; c++)
+  {
+    const page = await pdf.getPage(c);
+    const fields = await page.getAnnotations();
+    fields.forEach(item=>{
+      _content[filename][item.originalName] = item;
+    });
+  }
+}
+
+function printData() {
+  const target = document.getElementById('content');
+  target.innerHTML = Object
+    .keys(_content)
+    .map(filename=>(
+      '<h1>'+filename+'</h1><br/>'+
+      Object
+      .keys(_content[filename])
+      .map(fieldname=>fieldname+": "+getValue(_content[filename][fieldname]))
+      .join('<br/>')))
+    .join('<hr/>');
+}
+function getValue(field) {
+  switch(field.formElementType) {
+    case 'RADIO_BUTTON':
+      return field.fieldValue && field.fieldValue.name ? field.fieldValue.name : '-';
+      break;
+    case 'CHECK_BOX':
+      return field.fieldValue && field.fieldValue.name ? field.fieldValue.name : '-';
+      break;
+    default:
+      return field.fieldValue;
+      break;
+  }
+}
+
+    </script>
+</head>
+<body>
+<input type="file" id="file" style="border:1px solid black; background:#ccc; width:300px; height:50px;" multiple/>
+<div id="content"></div>
+</body>
+</html>
