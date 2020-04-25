@@ -1,0 +1,33 @@
+body {
+  margin:0;
+  padding:50px;
+  box-sizing:border-box;
+}
+input[type="file"] {
+  border:1px solid black;
+  background:#ffe;
+  width:100%;
+  height:100px;
+  padding:20px;
+  box-sizing:border-box;
+  margin-bottom:20px;
+}
+.container {
+  display:none;
+  width:100%;
+  border:1px solid black;
+  background:#fdfdfd;
+  padding:20px;
+  box-sizing:border-box;
+  margin: 20px auto;
+  overflow:auto;
+  font-family:monospace;
+}
+#csv {
+  white-space:nowrap;
+}
+#radio-dump:checked ~ #dump,
+#radio-csv:checked ~ #csv {
+  display:block;
+}
+
