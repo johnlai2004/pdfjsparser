@@ -3,17 +3,31 @@
 <head>
     <meta charset="utf-8" />
     <title>Parse PDF Forms</title>
-    <link href="style.css" rel="stylesheet" type="text/css" />
+    <link href="style.css?bc=2" rel="stylesheet" type="text/css" />
     <script src="pdf.js"></script>
     <script src="pdf.worker.js"></script>
     <script src="app.js"></script>
+    <script src="transform.js"></script>
 </head>
 <body>
-<input type="file" id="file" style="" multiple/>
-<a id="download" download="pdf-results.txt">Save File</a>
-<input type="radio" id="radio-dump" name="print" /><label for="radio-dump">Content Dump</label>
-<input type="radio" id="radio-csv" name="print" /><label for="radio-csv">CSV</label>
-<div id="dump" class="container"></div>
-<div id="csv" class="container"></div>
+  <input type="file" id="file" style="" multiple/>
+  <section id="result">
+  <div id="save">
+    <h6>Save Data Files</h6>
+    <a id="save-raw" download="data-raw.txt">Raw CSV</a>
+    <a id="save-transform" download="data-transformed.txt">Transformed CSV</a>
+  </div>
+  <div id="preview">
+    <h6>Preview</h6>
+    <input type="radio" id="radio-dump-raw" name="print" /><label for="radio-dump-raw">Raw Data</label>
+    <input type="radio" id="radio-dump-transform" name="print" /><label for="radio-dump-transform">Transformed Data</label>
+    <input type="radio" id="radio-raw" name="print" /><label for="radio-raw">Raw CSV</label>
+    <input type="radio" id="radio-transform" name="print" /><label for="radio-transform">Transformed CSV</label>
+    <div id="dump-raw" class="container"></div>
+    <div id="dump-transform" class="container"></div>
+    <div id="raw" class="container"></div>
+    <div id="transform" class="container"></div>
+  </div>
+  </div>
 </body>
 </html>

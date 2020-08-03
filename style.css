@@ -3,6 +3,7 @@ body {
   padding:50px;
   box-sizing:border-box;
 }
+h6 {font-size:1.2rem; margin:0.5em 0;}
 input[type="file"] {
   border:1px solid black;
   background:#ffe;
@@ -23,23 +24,34 @@ input[type="file"] {
   overflow:auto;
   font-family:monospace;
 }
-#csv {
+#raw,#transform {
   white-space:nowrap;
 }
-#radio-dump:checked ~ #dump,
-#radio-csv:checked ~ #csv {
+#radio-dump-raw:checked ~ #dump-raw,
+#radio-dump-transform:checked ~ #dump-transform,
+#radio-raw:checked ~ #raw,
+#radio-transform:checked ~ #transform {
   display:block;
 }
-#download {
+#result {
   display:none;
 }
-#download.show {
+#result.show {
   display:block;
-  margin:20px 0px 20px 0px;
+}
+#save-raw, #save-transform {
+  display:inline-block;
+  margin:0px 0px 20px 0px;
   padding:10px;
   width: 200px;
   text-align:center;
   background:orange;
   color:white;
   text-decoration:none;
+}
+table tr:hover td {
+  background:lightyellow;
+}
+table td {
+  border-bottom:1px solid #eee;
 }
