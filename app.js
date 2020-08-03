@@ -1,8 +1,10 @@
 let _content = {};
 document.addEventListener('DOMContentLoaded',_=>
   document.getElementById('file').addEventListener('change',e=>{
+    _content = {};
     document.getElementById('dump').innerHTML = '';
     document.getElementById('csv').innerHTML = '';
+    document.getElementById('download').classList.remove('show');
     Array.from(e.target.files).forEach(file=>loadFile(file));
   })
 );
@@ -14,7 +16,9 @@ function loadFile(file) {
     await loadFileComplete(ev,file.name);
     dumpData();
     printCsv();
+    printCsvFile();
     document.getElementById('radio-dump').checked = true;
+    document.getElementById('download').classList.add('show');
   };
   fileReader.readAsArrayBuffer(file, "UTF-8");
 }
@@ -30,7 +34,7 @@ async function loadFileComplete(ev,filename) {
     });
   }
 }
-function printCsv() {
+function getCsv(delimiter,linebreak) {
   // Get all the fields across ALL the files
   const allFields = Object
     .keys(_content)
@@ -41,10 +45,8 @@ function printCsv() {
         .filter(fieldname=>carry.indexOf(fieldname)<0)
       ),[]);
 
-  const delimiter = "|";
-  const target = document.getElementById('csv');
-  target.innerHTML =
-    "filename"+delimiter+allFields.join("|")+"<br/>"
+  const text =
+    "filename"+delimiter+allFields.join(delimiter)+linebreak
     +Object
     .keys(_content)
     .map(filename=>(
@@ -52,8 +54,18 @@ function printCsv() {
       allFields
       .map(fieldname=>(typeof _content[filename][fieldname] === 'undefined' ? '' : getValue(_content[filename][fieldname])))
       .join(delimiter)))
-    .join('<br/>');
+    .join(linebreak);
 
+  return text;
+}
+function printCsv() {
+  const target = document.getElementById('csv');
+  target.innerHTML = getCsv("|","<br/>");
+
+}
+function printCsvFile() {
+  const target = document.getElementById('download');
+  target.setAttribute('href','data:text/plain;charset=utf-8,'+encodeURIComponent(getCsv("|","\n")));
 }
 function dumpData() {
   const target = document.getElementById('dump');
