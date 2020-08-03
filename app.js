@@ -1,24 +1,29 @@
-let _content = {};
+let CONTENT = {};
 document.addEventListener('DOMContentLoaded',_=>
   document.getElementById('file').addEventListener('change',e=>{
-    _content = {};
+    CONTENT = {};
     document.getElementById('dump').innerHTML = '';
-    document.getElementById('csv').innerHTML = '';
-    document.getElementById('download').classList.remove('show');
+    document.getElementById('raw').innerHTML = '';
+    document.getElementById('result').classList.remove('show');
     Array.from(e.target.files).forEach(file=>loadFile(file));
   })
 );
 
 function loadFile(file) {
   let fileReader = new FileReader();
-  _content[file.name] = {};
+  CONTENT[file.name] = {};
   fileReader.onload = async function(ev) {
     await loadFileComplete(ev,file.name);
     dumpData();
-    printCsv();
-    printCsvFile();
+
+    document.getElementById('raw').innerHTML = getCsv("|","<br/>");
+    document.getElementById('transform').innerHTML = getTransformedData("<br/>");
+
+    document.getElementById('save-raw').setAttribute('href','data:text/plain;charset=utf-8,'+encodeURIComponent(getCsv("|","\n")));
+    document.getElementById('save-transform').setAttribute('href','data:text/plain;charset=utf-8,'+encodeURIComponent(getTransformedData("\n")));
+
+    document.getElementById('result').classList.add('show');
     document.getElementById('radio-dump').checked = true;
-    document.getElementById('download').classList.add('show');
   };
   fileReader.readAsArrayBuffer(file, "UTF-8");
 }
@@ -30,52 +35,43 @@ async function loadFileComplete(ev,filename) {
     const page = await pdf.getPage(c);
     const fields = await page.getAnnotations();
     fields.forEach(item=>{
-      _content[filename][item.originalName] = item;
+      CONTENT[filename][item.originalName] = item;
     });
   }
 }
 function getCsv(delimiter,linebreak) {
   // Get all the fields across ALL the files
   const allFields = Object
-    .keys(_content)
+    .keys(CONTENT)
     .reduce((carry,filename)=>
       carry
       .concat(Object
-        .keys(_content[filename])
+        .keys(CONTENT[filename])
         .filter(fieldname=>carry.indexOf(fieldname)<0)
       ),[]);
 
   const text =
     "filename"+delimiter+allFields.join(delimiter)+linebreak
     +Object
-    .keys(_content)
+    .keys(CONTENT)
     .map(filename=>(
       filename+delimiter+
       allFields
-      .map(fieldname=>(typeof _content[filename][fieldname] === 'undefined' ? '' : getValue(_content[filename][fieldname])))
+      .map(fieldname=>(typeof CONTENT[filename][fieldname] === 'undefined' ? '' : getValue(CONTENT[filename][fieldname])))
       .join(delimiter)))
     .join(linebreak);
 
   return text;
 }
-function printCsv() {
-  const target = document.getElementById('csv');
-  target.innerHTML = getCsv("|","<br/>");
-
-}
-function printCsvFile() {
-  const target = document.getElementById('download');
-  target.setAttribute('href','data:text/plain;charset=utf-8,'+encodeURIComponent(getCsv("|","\n")));
-}
 function dumpData() {
   const target = document.getElementById('dump');
   target.innerHTML = Object
-    .keys(_content)
+    .keys(CONTENT)
     .map(filename=>(
       '<h1>'+filename+'</h1><br/>'+
       Object
-      .keys(_content[filename])
-      .map(fieldname=>fieldname+": "+getValue(_content[filename][fieldname]))
+      .keys(CONTENT[filename])
+      .map(fieldname=>fieldname+": "+getValue(CONTENT[filename][fieldname]))
       .join('<br/>')))
     .join('<hr/>');
 }
@@ -92,4 +88,3 @@ function getValue(field) {
       break;
   }
 }
-
