@@ -80,11 +80,35 @@ const COLUMNS = {
   "Group51":"MLQ10 I am searching for the meaning in my life",
   "Group59":"Type of Visit",
 
+  "Region 1":"Pain Region 1",
+  "Region 2":"Pain Region 2",
+  "Region 3":"Pain Region 3",
+  "Region 4":"Pain Region 4",
+  "Region 5":"Pain Region 5",
+  "Region 6":"Pain Region 6",
+  "Other":"Pain Region Other",
   // __concat__pain_regions is not a REAL field in the pdf document.  Instead, the prefix __concat__
   // is a COMMAND to concatenate several fields together into one string.  The list of fields to be concatenated
   // is defined in TRANSLATIONS['__concat__pain_regions']
   "__concat__pain_regions":"Pain Regions(s) - Code",
+
+  "Diagnosis 1":"Pain Diagnosis 1",
+  "Diagnosis 2":"Pain Diagnosis 2",
+  "Diagnosis 3":"Pain Diagnosis 3",
+  "Diagnosis 4":"Pain Diagnosis 4",
+  "Diagnosis 5":"Pain Diagnosis 5",
+  "Diagnosis 6":"Pain Diagnosis 6",
+  "Other_2":"Pain Diagnosis Other",
   "__concat__pain_diagnosis":"Pain Diagnosis(s) - Code",
+
+
+  "Diagnosis 1_2":"Mental Health Diagnosis 1",
+  "Diagnosis 2_2":"Mental Health Diagnosis 2",
+  "Diagnosis 3_2":"Mental Health Diagnosis 3",
+  "Diagnosis 4_2":"Mental Health Diagnosis 4",
+  "Diagnosis 5_2":"Mental Health Diagnosis 5",
+  "Diagnosis 6_2":"Mental Health Diagnosis 6",
+  "Other_3":"Mental Health Diagnosis Other",
   "__concat__mental_health_diagnosis":"Mental Health Diagnosis(s) - Code"
 };
 const YESNO = {"0":"Yes","1":"No"};
