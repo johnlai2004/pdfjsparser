@@ -18,16 +18,16 @@ function loadFile(file) {
     await loadFileComplete(ev,file.name);
 
     dumpRawData();
-    dumpTransformData();
+    dumpTransformedData();
 
-    document.getElementById('raw').innerHTML = getCsv("|","<br/>");
+    document.getElementById('raw').innerHTML = getRawData("|","<br/>");
     document.getElementById('transform').innerHTML = getTransformedData("<br/>");
 
-    document.getElementById('save-raw').setAttribute('href','data:text/plain;charset=utf-8,'+encodeURIComponent(getCsv("|","\n")));
+    document.getElementById('save-raw').setAttribute('href','data:text/plain;charset=utf-8,'+encodeURIComponent(getRawData("|","\n")));
     document.getElementById('save-transform').setAttribute('href','data:text/plain;charset=utf-8,'+encodeURIComponent(getTransformedData("\n")));
 
     document.getElementById('result').classList.add('show');
-    document.getElementById('radio-dump-raw').checked = true;
+    document.getElementById('radio-dump-transform').checked = true;
   };
   fileReader.readAsArrayBuffer(file, "UTF-8");
 }
@@ -43,7 +43,69 @@ async function loadFileComplete(ev,filename) {
     });
   }
 }
-function getCsv(delimiter,linebreak) {
+
+function getValue(field) {
+  switch(field.formElementType) {
+    case 'RADIO_BUTTON':
+      return field.fieldValue && field.fieldValue.name ? field.fieldValue.name : '-';
+      break;
+    case 'CHECK_BOX':
+      return field.fieldValue && field.fieldValue.name ? field.fieldValue.name : '-';
+      break;
+    default:
+      return field.fieldValue;
+      break;
+  }
+}
+function getTransformedValue(filename,fieldname) {
+
+  if(fieldname.match(/^__concat__/) && typeof COLUMNS[fieldname] !== 'undefined' && Array.isArray(TRANSLATIONS[fieldname]))
+    return TRANSLATIONS[fieldname]
+    .map(field=>typeof CONTENT[filename][field] === 'undefined' ? '' : getValue(CONTENT[filename][field]))
+    .filter(val=>val && val.toString().length>0 && !val.match(/\s+/))
+    .join(', ');
+
+  if(typeof CONTENT[filename][fieldname] === 'undefined')
+    return;
+
+  const val = getValue(CONTENT[filename][fieldname]);
+  return typeof TRANSLATIONS[fieldname] === 'undefined' ? val : TRANSLATIONS[fieldname][val.toString()];
+}
+
+function dumpRawData() {
+  const target = document.getElementById('dump-raw');
+  target.innerHTML = Object
+    .keys(CONTENT)
+    .map(filename=>(
+      '<h1>'+filename+'</h1><table>'+
+      Object
+      .keys(CONTENT[filename])
+      .map(fieldname=>'<tr><td>'+fieldname+'</td><td>'+getValue(CONTENT[filename][fieldname])+'</td></tr>')
+      .join('')+
+      '</table>'
+      )
+    )
+    .join('<hr/>');
+}
+function dumpTransformedData() {
+  const target = document.getElementById('dump-transform');
+  target.innerHTML = Object
+    .keys(CONTENT)
+    .map(filename=>(
+      '<h1>'+filename+'</h1><table>'+
+      Object
+      .keys(COLUMNS)
+      .map(fieldname=>{
+          const val = getTransformedValue(filename,fieldname);
+          return typeof val === 'undefined' ? '' : '<tr><td>'+COLUMNS[fieldname]+'</td><td>'+val+'</td></tr>';
+        })
+      .join('')+
+      '</table>'
+      )
+    )
+    .join('<hr/>');
+}
+function getRawData(delimiter,linebreak) {
   // Get all the fields across ALL the files
   const allFields = Object
     .keys(CONTENT)
@@ -67,61 +129,6 @@ function getCsv(delimiter,linebreak) {
 
   return text;
 }
-function dumpRawData() {
-  const target = document.getElementById('dump-raw');
-  target.innerHTML = Object
-    .keys(CONTENT)
-    .map(filename=>(
-      '<h1>'+filename+'</h1><table>'+
-      Object
-      .keys(CONTENT[filename])
-      .map(fieldname=>'<tr><td>'+fieldname+'</td><td>'+getValue(CONTENT[filename][fieldname])+'</td></tr>')
-      .join('')+
-      '</table>'
-      )
-    )
-    .join('<hr/>');
-}
-function dumpTransformData() {
-  const target = document.getElementById('dump-transform');
-  target.innerHTML = Object
-    .keys(CONTENT)
-    .map(filename=>(
-      '<h1>'+filename+'</h1><table>'+
-      Object
-      .keys(COLUMNS)
-      .filter(fieldname=>typeof CONTENT[filename][fieldname] !== 'undefined')
-      .map(fieldname=>{
-          if(typeof CONTENT[filename][fieldname] === 'undefined')
-            return '';
-
-          let val = getValue(CONTENT[filename][fieldname]);
-          if(typeof TRANSLATIONS[fieldname] !== 'undefined')
-            val = TRANSLATIONS[fieldname][val.toString()];
-
-          return '<tr><td>'+COLUMNS[fieldname]+'</td><td>'+val+'</td></tr>';
-        })
-      .join('')+
-      '</table>'
-      )
-    )
-    .join('<hr/>');
-}
-
-function getValue(field) {
-  switch(field.formElementType) {
-    case 'RADIO_BUTTON':
-      return field.fieldValue && field.fieldValue.name ? field.fieldValue.name : '-';
-      break;
-    case 'CHECK_BOX':
-      return field.fieldValue && field.fieldValue.name ? field.fieldValue.name : '-';
-      break;
-    default:
-      return field.fieldValue;
-      break;
-  }
-}
-
 function getTransformedData(linebreak) {
 
   // Make the header row
@@ -133,15 +140,8 @@ function getTransformedData(linebreak) {
     const row = filename+DELIMITER+
       Object.keys(COLUMNS)
         .map(pdffieldname=>{
-          csvcolumn = COLUMNS[pdffieldname];
-          if(typeof CONTENT[filename][pdffieldname] === 'undefined')
-            return '';
-
-          let val = getValue(CONTENT[filename][pdffieldname]);
-          if(typeof TRANSLATIONS[pdffieldname] !== 'undefined')
-            val = TRANSLATIONS[pdffieldname][val.toString()];
-
-          return val;
+          const val = getTransformedValue(filename,pdffieldname);
+          return typeof val === 'undefined' ? '' : val;
         })
         .join(DELIMITER);
     return row;

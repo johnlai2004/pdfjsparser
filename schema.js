@@ -50,8 +50,42 @@ const COLUMNS = {
   "Group48":"MLQ7 I am always searching for something that makes my life feel significant",
   "Group49":"MLQ8 I am seeking a purpose or mission for my life",
   "Group50":"MLQ9 My life has no clear purpose",
+
+  "days per week":"IPA1 days per week",
+  "Check Box13":"IPA1 No vigorous physical activities",
+
+  "hours per day":"IPA2 hours per day",
+  "minutes per day":"IPA2 minutes per day",
+  "Check Box14":"IPA2 Don't know/Not sure",
+
+  "days per week_2":"IPA3 days per week",
+  "Check Box15":"IPA3 Don't know/Not sure",
+
+  "hours per day_2":"IPA4 hours per day",
+  "minutes per day_2":"IPA4 minutes per day",
+  "Check Box16":"IPA4 Don't know/Not sure",
+
+  "days per week_3":"IPA5 days per week",
+  "Check Box17":"IPA5 No walking",
+  "Check Box18":"IPA5 Skip to question 7",
+
+  "hours per day_3":"IPA6 hours per day",
+  "minutes per day_3":"IPA6 minutes per day",
+  "Check Box19":"IPA6 Don't know/Not sure",
+
+  "hours per day_4":"IPA7 hours per day",
+  "minutes per day_4":"IPA7 minutes per day",
+  "Check Box20":"IPA7 Don't know/Not sure",
+
   "Group51":"MLQ10 I am searching for the meaning in my life",
-  "AnythingElse":"Anything Else?"
+  "Group59":"Type of Visit",
+
+  // __concat__pain_regions is not a REAL field in the pdf document.  Instead, the prefix __concat__
+  // is a COMMAND to concatenate several fields together into one string.  The list of fields to be concatenated
+  // is defined in TRANSLATIONS['__concat__pain_regions']
+  "__concat__pain_regions":"Pain Regions(s) - Code",
+  "__concat__pain_diagnosis":"Pain Diagnosis(s) - Code",
+  "__concat__mental_health_diagnosis":"Mental Health Diagnosis(s) - Code"
 };
 const YESNO = {"0":"Yes","1":"No"};
 const NOYES = {"0":"No","1":"Yes"};
@@ -83,5 +117,8 @@ const TRANSLATIONS = {
   "Group49":MLQCORRECTION2,
   "Group50":MLQCORRECTION2,
   "Group51":MLQCORRECTION2,
-  "AnythingElse":""
+  "Group59":{"0":"Consult","1":"Follow up"},
+  "__concat__pain_regions":["Region 1","Region 2","Region 3","Region 4","Region 5","Region 6","Other"],
+  "__concat__pain_diagnosis":["Diagnosis 1","Diagnosis 2","Diagnosis 3","Diagnosis 4","Diagnosis 5","Diagnosis 6","Other_2"],
+  "__concat__mental_health_diagnosis":["Diagnosis 1_2","Diagnosis 2_2","Diagnosis 3_2","Diagnosis 4_2","Diagnosis 5_2","Diagnosis 6_2","Other_3"]
 };
