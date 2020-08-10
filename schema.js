@@ -114,7 +114,7 @@ const COLUMNS = {
 const YESNO = {"0":"Yes","1":"No"};
 const NOYES = {"0":"No","1":"Yes"};
 const MLQCORRECTION1 = {"0":"1","1":"2","2":"3","3":"4","4":"5","5":"6","6":"7"};
-const MLQCORRECTION2 = {"0":"2","1":"3","2":"4","3":"5","4":"6","5":"7","6":"1"};
+//const MLQCORRECTION2 = {"0":"2","1":"3","2":"4","3":"5","4":"6","5":"7","6":"1"};
 
 // Use TRANSLATIONS to translate numerical values to more meaningful answers for humans to read
 const TRANSLATIONS = {
@@ -122,7 +122,8 @@ const TRANSLATIONS = {
   "Group18":{"0":"Off","1":"Part time","2":"Full time, modified duties","3":"Full time, no restrictions"},
   "Group19":{"0":"None","1":"TCAT","2":"PCAT"},
   "Group3":YESNO,
-  "Group4":NOYES, // looks like person who made a form didn't pay attention and swapped 0 and 1 for no and yes
+  //"Group4":NOYES, // looks like person who made a form didn't pay attention and swapped 0 and 1 for no and yes
+  "Group4":YESNO,
   "Group5":YESNO,
   "Group6":YESNO,
   "Group7":YESNO,
@@ -137,10 +138,10 @@ const TRANSLATIONS = {
   "Group45":MLQCORRECTION1,
   "Group46":MLQCORRECTION1,
   "Group47":MLQCORRECTION1,
-  "Group48":MLQCORRECTION2,
-  "Group49":MLQCORRECTION2,
-  "Group50":MLQCORRECTION2,
-  "Group51":MLQCORRECTION2,
+  "Group48":MLQCORRECTION1,
+  "Group49":MLQCORRECTION1,
+  "Group50":MLQCORRECTION1,
+  "Group51":MLQCORRECTION1,
   "Group59":{"0":"Consult","1":"Follow up"},
   "__concat__pain_regions":["Region 1","Region 2","Region 3","Region 4","Region 5","Region 6","Other"],
   "__concat__pain_diagnosis":["Diagnosis 1","Diagnosis 2","Diagnosis 3","Diagnosis 4","Diagnosis 5","Diagnosis 6","Other_2"],
